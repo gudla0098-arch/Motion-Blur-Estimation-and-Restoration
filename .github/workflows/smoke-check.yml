@@ -1,0 +1,39 @@
+name: Motion Blur smoke check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Compile backend
+        run: python -m compileall -q backend api
+      - name: Check JavaScript syntax
+        run: node --check motion-blur.js
+      - name: Verify API routes and kernels
+        run: |
+          python - <<'PY'
+          import numpy as np
+          from backend.main import app, _motion_kernel, _wiener_restore
+          routes = {r.path for r in app.routes}
+          assert "/api/motion-blur" in routes
+          assert "/api/result/{filename}" in routes
+          assert "/" in routes
+          for model in ("linear", "circular", "uniform", "non-uniform"):
+              kernel = _motion_kernel(model, 9, 35)
+              assert np.isclose(kernel.sum(), 1.0)
+          sample = np.full((64, 64, 3), 120, dtype=np.uint8)
+          output = _wiener_restore(sample, _motion_kernel("linear", 9, 0), 0.008)
+          assert output.shape == sample.shape
+          print("Motion Blur smoke tests passed.")
+          PY
