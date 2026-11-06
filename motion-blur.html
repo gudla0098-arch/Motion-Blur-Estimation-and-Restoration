@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Estimate and restore motion blur in images with interactive blur models.">
+<title>Motion Blur Estimation & Restoration — IP</title>
+<link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/motion-blur.css">
+</head>
+<body class="motion-page">
+<header class="nav"><a class="logo" href="/">IP</a><nav><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/motion-blur">Motion Blur</a></li></ul></nav></header>
+<main class="motion-shell">
+<section class="motion-heading"><p class="eyebrow">DIGITAL IMAGE PROCESSING / RESTORATION LAB</p><h1>Motion Blur Estimation And Restoration</h1><p>Model motion, estimate blur parameters, and recover a sharper image with classical deconvolution.</p></section>
+<section class="motion-workspace">
+<div class="upload-column">
+<div class="motion-drop" id="motion-drop" tabindex="0" role="button" aria-label="Choose or drop an image">
+<input id="motion-file" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+<div class="upload-symbol">↥</div><h2>Drop your image here</h2><p>or <button id="browse-motion" class="text-button" type="button">browse files</button></p><small>PNG, JPG or WEBP · Up to 12 MB</small>
+</div>
+<div class="selected-file" id="motion-selected" hidden><img id="motion-original-thumb" alt="Selected image"><div><strong id="motion-filename"></strong><small id="motion-dimensions"></small></div><button id="clear-motion" type="button" class="quiet-button">Remove</button></div>
+<div class="motion-controls">
+<div class="control-header"><div><span class="eyebrow">01 / BLUR MODEL</span><h2>Choose blur type</h2></div><span class="control-count">4 MODELS</span></div>
+<div class="blur-options" role="group" aria-label="Motion blur type">
+<button class="blur-option active" data-blur="linear" type="button"><span class="model-icon">↗</span><strong>Linear</strong><small>Directional movement</small></button>
+<button class="blur-option" data-blur="circular" type="button"><span class="model-icon">◌</span><strong>Circular</strong><small>Rotational movement</small></button>
+<button class="blur-option" data-blur="uniform" type="button"><span class="model-icon">⇢</span><strong>Uniform</strong><small>Constant motion</small></button>
+<button class="blur-option" data-blur="non-uniform" type="button"><span class="model-icon">〰</span><strong>Non-uniform</strong><small>Variable movement</small></button>
+</div>
+<div class="range-grid">
+<label>Motion length <strong><output id="length-value">18 px</output></strong><input id="motion-length" type="range" min="3" max="45" value="18"></label>
+<label>Motion angle <strong><output id="angle-value">0°</output></strong><input id="motion-angle" type="range" min="0" max="180" value="0"></label>
+<label>Restoration strength <strong><output id="strength-value">0.008</output></strong><input id="motion-strength" type="range" min="1" max="50" value="8"></label>
+</div>
+<p class="model-note" id="model-note">Linear blur models a straight camera or subject movement using a directional point-spread function.</p>
+<button id="restore-motion" class="motion-primary" type="button" disabled><span>✦</span> Estimate & restore image</button>
+<p class="motion-status" id="motion-status" role="status">Upload an image to begin.</p>
+</div>
+</div>
+<aside class="process-column">
+<div class="process-card"><span class="eyebrow">PROCESS PIPELINE</span><h2>How it works</h2><ol class="pipeline"><li><i>01</i><span><strong>Input image</strong><small>Read pixels and dimensions</small></span></li><li><i>02</i><span><strong>Blur estimation</strong><small>Build a point-spread model</small></span></li><li><i>03</i><span><strong>Blur model</strong><small>Configure motion kernel</small></span></li><li><i>04</i><span><strong>Image restoration</strong><small>Wiener deconvolution</small></span></li><li><i>05</i><span><strong>Restored output</strong><small>Preview and download</small></span></li></ol></div>
+<div class="info-card"><span class="eyebrow">RESTORATION METHODS</span><h3>Wiener filtering</h3><p>Frequency-domain deconvolution balances inverse filtering against noise amplification. The selected blur model supplies the point-spread function.</p><a href="#about-motion">Understand the method ↓</a></div>
+</aside>
+</section>
+<section class="results-section" id="motion-results" hidden><div class="results-heading"><div><span class="eyebrow">PROCESS COMPLETE</span><h2>Restoration results</h2></div><a id="download-motion" class="download-button" href="#" download>↓ Download restored image</a></div><div class="comparison-grid"><figure><figcaption>INPUT IMAGE <span>Original</span></figcaption><img id="result-input" alt="Original uploaded image"></figure><figure><figcaption>RESTORED IMAGE <span>Output</span></figcaption><img id="result-output" alt="Restored image"></figure></div><p class="result-meta" id="result-meta"></p></section>
+<section class="motion-about" id="about-motion"><div><span class="eyebrow">THE THEORY</span><h2>From blur to clarity.</h2><p>Motion blur occurs when a camera or subject moves while the shutter is open. Restoration estimates the blur process and attempts to reverse its effect. Results depend on the accuracy of the blur model and the information retained in the input image.</p></div><div class="about-points"><article><strong>01 / Estimate</strong><p>Define motion direction, length and point-spread function.</p></article><article><strong>02 / Restore</strong><p>Apply Wiener deconvolution to reduce modeled blur.</p></article><article><strong>03 / Evaluate</strong><p>Inspect the output. Severe blur and noise can limit recovery.</p></article></div></section>
+<footer class="motion-footer">IP — DIGITAL IMAGE PROCESSING <span>Motion Blur Estimation & Restoration</span></footer>
+</main><script src="/motion-blur.js"></script>
+</body></html>
